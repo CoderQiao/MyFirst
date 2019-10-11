@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>网上商城</title>
+	</head>
+
+    <style>
+    /* 页码区 */
+.page-index-bar{
+	margin: 40px 0 60px 0;
+	text-align: center;
+}
+.page-index-bar .page{
+	display: inline-block;
+	text-align: center;
+	background-color: #ea9518;
+	color: #fff;
+	margin: 0px 4px;
+	padding: 4px 10px;
+	border-radius: 10px;
+}
+.page-index-bar .static{
+	background-color: #888;
+}
+    
+    .row{
+	margin: 14px 0px;
+}
+    	
+      table img{
+            width:50px;
+            height:50px;
+        }
+    </style>
+
+	<body>
+		<!-- 设定基准路径 -->
+		<base href='/wssc/'> 
+		<#include '/page/head_customer.html' />
+
+		<div class="container"style="margin: 0 auto;">
+			<ul class="nav nav-tabs" id="myTab" role="tablist">
+              <li class="nav-item">
+                <a class="nav-link " id="home-tab" data-toggle="tab" href="#home" role="tab">商品管理</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" >用户管理</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab">订单管理</a>
+              </li>
+            </ul>
+
+        <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade" id="home" role="tabpanel" >
+
+              <!--第一个内容区上半部分-->
+            <table id="firstTop" class="table table-hover"style="margin: 10px 0;">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col">电子产品编号</th>
+                  <th scope="col">名称</th>
+                  <th scope="col">售价</th>
+                  <th scope="col">图片</th>
+                  <th scope="col">剩余数量</th>
+                  <th scope="col">上传时间</th>
+                  <th scope="col">操作</th>
+                </tr>
+              </thead>
+              <tbody>
+              <#list elecs as elec>
+              	<tr>
+                  <th scope="row">${elec.eleID}</th>
+                  <td>${elec.title}</td>
+                  <td>￥${elec.price}</td>
+                  <td style="margin: 0;padding: 2px;"><img src="${elec.picturePath}"></td>
+                  <td>${elec.remainNum}</td>
+                  <td>${elec.addTime}</td>
+                  <td>
+                      <button data="${elec.eleID}" data1="elec" class="btn btn-success" onclick="F.productUpdate(this)">修改</a>
+                      <button data='${elec.eleID}' data1="elec" class="btn btn-danger" onclick="F.productDelete(this)">删除</button>
+                  </td>
+                </tr>
+              </#list>
+              </tbody>
+            </table>
+			 <a href="addProduct.html?type=elec" id="eleButton" class="btn btn-success" style="display: none;" >添加</a>
+          <!--第一个内容区下半部分-->
+  		<table id="firstBottom" class="table table-hover "style="margin: 10px 0;">
+          <thead class="thead-light">
+            <tr>
+              <th scope="col">服装服饰编号</th>
+              <th scope="col">名称</th>
+              <th scope="col">售价</th>
+              <th scope="col">图片</th>
+              <th scope="col">剩余数量</th>
+              <th scope="col">上传时间</th>
+              <th scope="col">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <#list clothes as cloth>
+              	<tr>
+                  <th scope="row">${cloth.cloID}</th>
+                  <td>${cloth.title}</td>
+                  <td>￥${cloth.price}</td>
+                  <td style="margin: 0;padding: 2px;"><img src="${cloth.picturePath}"></td>
+                  <td>${cloth.remainNum}</td>
+                  <td>${cloth.addTime}</td>
+                  <td>
+                      <button data="${cloth.cloID}" data1="cloth" class="btn btn-success" onclick="F.productUpdate(this)">修改</button>
+                      <button data="${cloth.cloID}" data1="cloth" class="btn btn-danger" onclick="F.productDelete(this)">删除</button>
+                  </td>
+                </tr>
+              </#list>
+              
+          </tbody>
+        </table>
+  	 <a href="addProduct.html?type=cloth" id="cloButton" class="btn btn-success"style="display: none;" >添加</a>
+    </div>
+
+    <!--第二个内容区-->
+    <div class="tab-pane fade" id="profile" role="tabpanel">
+  		
+  		<!--按用户名搜索-->
+  		<div class="input-group mb-3">
+		  <input type="text" class="form-control" id="userName" placeholder="按用户名查询" value="${userName}" >
+		  <div class="input-group-append">
+		    <button class="btn btn-outline-secondary" onclick='S.go(1)'>搜索</button>
+		  </div>
+		</div>
+  	
+  		<table class="table table-hover "style="margin: 10px 0;">
+          <thead class="thead-light">
+            <tr>
+              <th scope="col">用户编号</th>
+              <th scope="col">账号名</th>
+              <th scope="col">姓名</th>
+              <th scope="col">性别</th>
+              <th scope="col">手机号</th>
+              <th scope="col">地址</th>
+              <th scope="col">注册时间</th>
+            </tr>
+          </thead>
+          <tbody>
+            <#list users as user>
+              	<tr>
+                  <th scope="row">${user.userID}</th>
+                  <td>${user.name}</td>
+                  <td>${user.realName}</td>
+                  <td>${user.sex}</td>
+                  <td>${user.telephone}</td>
+                  <td>${user.address}</td>
+                  <td>${user.addTime}</td>
+                </tr>
+              </#list>
+          </tbody>
+        </table>
+
+    <!--分页标签-->
+  	<div class='page-index-bar'></div>
+  	
+    </div>
+   
+		
+
+        <!--第三个内容区-->
+    <div class="tab-pane fade" id="contact" role="tabpanel" >
+  	 	<button class="btn btn-danger" onclick="T.deleteBill()">删除</button>
+  	    <table class="table table-hover "style="margin: 10px 0;">
+          <thead class="thead-light">
+             <tr>
+           	  <th scope="col"><input name="checkTop" type="checkbox"></th>
+              <th scope="col">商品名</th>
+              <th scope="col">图片</th>
+              <th scope="col">价格</th>
+              <th scope="col">数量</th>
+              <th scope="col">购买者</th>
+              <th scope="col">购买者ID</th>
+              <th scope="col">购买时间</th>
+
+            </tr>
+          </thead>
+          <tbody>
+           <#list bills as bill>
+              	<tr>
+              	  <th scope="col" ><input value="${bill.billID}" type="checkbox"></th>
+                  <th scope="row">${bill.title}</th>
+                  <td style="margin: 0;padding: 2px;"><img src="${bill.picturePath}"></td>
+                  <td>${bill.price}</td>
+                  <td>${bill.number}</td>
+                  <td>${bill.name}</td>
+                  <td>${bill.userID}</td>
+                  <td>${bill.buyTime}</td>
+                 
+                </tr>
+              </#list>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    </div>
+    
+
+	</body>
+	
+	<script type="text/javascript">
+	
+	var F = {};
+	F.eleCount = ${eleCount};
+	F.cloCount = ${cloCount};
+	
+	F.productDelete = function(e){
+		var req = {};
+		req.proID = $(e).attr("data");
+		req.data1 = $(e).attr("data1");
+		Af.rest("productDelete.api",req,function(data){
+			$(e).parent().parent().remove();
+			alert("删除成功!");
+			if(req.data1=="elec")F.eleCount = F.eleCount - 1;
+			else F.cloCount = F.cloCount - 1;
+			F.checkButton();
+		});
+	}
+	F.checkButton = function(){
+		if(F.eleCount>=4)$("#eleButton").hide();
+		else $("#eleButton").show();
+		if(F.cloCount>=4)$("#cloButton").hide();
+		else $("#cloButton").show();
+	}
+
+	F.productUpdate = function(e){
+		var id = $(e).attr("data");
+		var type = $(e).attr("data1");
+		location.href = "/wssc/page/addProduct.html?"+"id="+id+"&"+"type="+type;
+		console.log("addProduct.html?"+"id="+id+"&"+"type="+type);
+	}
+	
+	var S = {};
+	S.pageNumber = ${pageNumber};
+	S.pageCount = ${pageCount };
+	
+	
+		/* 显示页码 */
+		S.showPageIndex = function(pageNumber, pageCount)
+		{
+			var str = "";			
+			var skipped = false;
+			for(var i=1; i<=pageCount; i++)
+			{
+				// 如果页面数过多，则添加一个省略号
+				if(i< pageNumber - 2 && i >= 2)
+				{
+					if(!skipped ) str += "...";
+					skipped = true;
+					continue;
+				}
+				if(i> pageNumber + 2 && i <= pageCount - 1)
+				{
+					if(!skipped ) str += "...";
+					skipped = true;
+					continue;
+				}
+				skipped = false;
+				
+				
+				// 当前页码： 以高亮显示
+				if(i == pageNumber)
+					str += "<label class='page static'> ##1 </label>".replace(/##1/g, i);
+				else
+					str += "<button class='page' onclick='S.go(##1)'> ##1 </button>".replace(/##1/g, i);
+				
+				$('.page-index-bar').html(str);					
+			}
+		}
+		
+		
+	
+		S.go = function(page)
+		{
+			
+			var userName = $('#userName').val().trim();
+			userName = encodeURIComponent( userName); // URL编码
+
+			var url = 'index.do?p=' + page + '&userName=' + userName;
+			//console.log('GO URL: ' + url);
+			location.href = url;
+		}
+		
+		var T = {};
+		
+		T.deleteBill = function(){
+			var id_array = new Array();
+			$("#contact tbody input:checkbox:checked").each(function(){
+				id_array.push($(this).val());
+				$(this).parent().parent().remove();
+			});
+			var req = {};
+			req.id_array = id_array;
+			Af.rest("billDelete.api",req,function(data){
+				alert("删除成功");
+			});
+		}
+		
+	$("input[name='checkTop']").change(function(){
+		
+		if($(this).is(":checked")){
+			
+		$("#contact input:checkbox").attr("checked",true);
+		}
+		else {$("#contact input:checkbox").attr("checked",false);
+		}
+	});
+	
+	$(".nav-item .nav-link").click(function(){
+		var itemID = $(this).attr("id");
+		var paneID = $(this).attr("href");
+		
+		sessionStorage.setItem("itemID",itemID);
+		sessionStorage.setItem("paneID",paneID);
+	});
+	
+	$(document).ready(function(){
+		var itemID = sessionStorage.getItem("itemID");
+		var paneID = sessionStorage.getItem("paneID"); 
+		$("#"+itemID).addClass("active");
+		$(paneID).addClass("show active");
+		
+		F.checkButton();
+		S.showPageIndex(S.pageNumber, S.pageCount); // 显示页码
+	});
+	
+	
+	
+	
+	</script>
+	
+</html>

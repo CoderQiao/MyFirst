@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		
+		<meta charset="utf-8">
+	    <!--为了保证在移动端能够正常的显示-->
+	    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<!--
+	    	作者：2324805058@qq.com
+	    	时间：2019-09-30
+	    	描述：meta 属性不能导入body内
+	    -->
+		
+		<title>商品详情</title>
+	</head>
+	<body>
+		<!-- 设定基准路径 -->
+		<base href='${basePath}'> 
+		<!--#include virtual="/page/head_customer.html" -->
+
+		<div class="container"style="margin: 50px auto;">
+		    <div class="row">
+		        <div class="card col-6" style="width: 18rem;">
+				    <img class="card-img-top" style="width: 100%;height: 100%;" src="${product.picturePath}">
+				   
+				</div>
+				<div class="clo-6" style="width:18rem">
+					<div class="card-body"style="width: 800px;">
+				        <h5 class="card-title">${product.title}</h5>
+				        <div class="container" style="margin: 10px;">
+				        	<div class="row w-100 bg-light"style="padding: 10px 0 0;">
+				        		<p class="text-center"style="padding: 15px;height: 20px;">会员价：</p>
+				        		<p id="price" class="text-center"style="padding: 6px;height: 30px; font-size: 25px; color: red;">￥${product.price?c}</p>
+				        		<button class="btn" style="color: blue;font-size: 15px;">降价通知</button>
+				        	</div>
+				        	<div class="row w-100 bg-light"style="padding: 0 0 10px;">
+				        		<p class="text-center"style="padding: 15px;height: 20px;">促销：</p>
+				        		<p id="information" class="text-center"style="padding: 15px;height: 20px;">${product.information}</p>
+				        	</div>
+				        	<div class="row w-100"style="margin: 10px 0;">
+				        		<p class="text-center"style="padding: 6px;height: 20px;">选择颜色：</p>
+				        		<button class="btn btn-light">魅海蓝</button>&nbsp;&nbsp;
+				        		<button class="btn btn-light">幻夜黑</button>&nbsp;&nbsp;
+				        		<button class="btn btn-light">媚焰红</button>
+				        	</div>
+				        	<div class="row w-100" style="margin: 10px 0;">
+				        		<p class="text-center"style="padding: 6px;height: 20px;">选择版本：</p>
+				        		<button class="btn btn-light">全网通（4G+64G）</button>&nbsp;&nbsp;
+				        		<button class="btn btn-light">全网通（6G+64G）</button>&nbsp;&nbsp;
+				        		<button class="btn btn-light">全网通（6G+128G）</button>
+				        	</div>
+				        	<div class="row w-100"style="margin: 10px 0;">
+				        		<p class="text-center"style="padding: 6px;height: 20px;">选择套餐：</p>
+				        		<button class="btn btn-light">官方标配</button>&nbsp;&nbsp;
+				        		<button class="btn btn-light">碎屏险套餐</button>&nbsp;&nbsp;
+				        		<button class="btn btn-light">手环套餐</button>
+				        	</div>
+				        	<div class="row w-100"style="margin: 10px 0;">
+				        		<p class="text-center"style="padding: 6px;height: 20px;">白条分期：</p>
+				        		<button class="btn btn-light">不分期</button>&nbsp;&nbsp;
+				        		<button class="btn btn-light">￥541×3期</button>&nbsp;&nbsp;
+				        		<button class="btn btn-light">￥274.5×6期</button>&nbsp;&nbsp;
+				        		<button class="btn btn-light">￥141.25×12期</button>
+				        	</div>
+				        	<div class="row w-100"style="margin: 30px 0;">
+				        		<p class="text-center"style="padding: 6px;height: 20px;">数量：</p>
+				        		
+				        		<div id="number" class="input-group mb-3 w-25" >
+									  <select class="custom-select" id="inputGroupSelect03">
+									    <option value="1" selected>1</option>
+									    <option value="2">2</option>
+									    <option value="3">3</option>
+									  </select>
+								</div>
+				        		&nbsp;&nbsp;&nbsp;&nbsp;
+				        		<button class="btn btn-lg btn-danger" onclick="addToCart()">加入购物车</button>
+				        	</div>
+				        </div>
+				    </div>
+				</div>
+			</div>
+		</div>	
+	</body>
+	<script>
+		function addToCart(){
+			<!--error : 6-->
+			<!--error : var req.id-->
+			var req = {};
+			req.id = location.href.split("/")[6].split('.')[0].split('_')[0];
+			req.picturePath = $('.card-img-top').attr('src');
+			req.title = $('.card-title').html();
+			req.price = $('#price').html().split("￥")[1];
+			req.information = $('#information').html();
+			req.number = $('#number option:selected').val();
+			Af.rest("cartAdd.api",req,function(data){
+				alert("添加购物车成功！");
+				location.href = "index.shtml";
+			});
+			
+		}
+	</script>
+</html>

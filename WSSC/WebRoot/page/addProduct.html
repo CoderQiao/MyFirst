@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<base href='/wssc/'> <!-- 设定基准路径 -->
+	    <!--为了保证在移动端能够正常的显示-->
+	    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	
+	    <!-- 导入Bootstrap的CSS文件 -->
+	    <link rel="stylesheet" href="css/bootstrap.css">
+	
+	    <!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+	    <script src="js/jquery-3.1.1.js"></script>
+	    <!--在Bootstrap4中很多的提示/弹窗都是通过popper.min.js实现的, 所以需要导入-->
+	    <script src="js/popper.js"></script>
+	    <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+	    <script src="js/bootstrap.js"></script>
+	    
+	    <!--   引入前端框架     -->
+        <script type="text/javascript" src="js/afquery.js" ></script>
+		<title>添加页面</title>
+		
+	</head>
+	<body>
+		<div id="addContainer" class="container card" style="margin: 100px auto;padding: 30px; width: 500px;">
+			
+			<a href="index.do">返回首页</a>
+			<p id="tip">当前操作：</p>
+			<form>
+	            <div class="form-group">
+	            	<img id="picture" style="margin:10px;width: 100px;height: 100px;" src="" />
+	            	<input type='file' class='filebutton' style='display:none'  />
+	            	<a href="javascript:0" onclick="up.openFileDialog()">上传图片</a> <!--button会使ajax无法正确返回  -->
+                                                                        
+                                                                                
+	            </div>
+	            <div class="form-group">
+	            	<input type="text" class="form-control" id="title"style="margin: 5px;" placeholder="商品名：">
+	                <input type="text" class="form-control" id="information"style="margin: 5px;" placeholder="商品描述信息：">
+	                <input type="text" class="form-control" id="price"style="margin: 5px;" placeholder="价格：">
+	                <input type="text" class="form-control" id="remain"style="margin: 5px;" placeholder="剩余量：">
+	            </div>
+	            <a class="btn btn-primary" data="" id="addButton" onclick='F.addProduct(this)'style="display: none;">添加</a>
+	            <a class="btn btn-primary" data="" data1="" id="updateButton" onclick='F.updateProduct(this)'style="display: none;">修改</a>
+	        </form>
+			
+		</div>
+		
+	</body>
+	
+	<script>
+			// 初始化文件上传
+			var up = new AfUploader();
+			up.setButton('.filebutton');  // 设置file input控件
+			up.setUploadUrl('ImageUpload.up'); // 设置服务URL
+			up.setLogEnabled( false );
+			
+			// 事件处理 'start' 'progress' 'complete' 'error' 'abort'
+			up.processEvent = function(event)
+			{
+				if(event == 'progress')
+				{
+					Af.log("进度: " + this.progress);
+				}
+				else if(event == 'complete')
+				{
+					Af.log("完成上传");
+					Af.log(this.response);
+					
+					var jresp = JSON.parse (this.response); 
+					var url  = jresp.data.url;
+					$('#picture').attr('src', url);
+					
+					//
+					this.result = jresp.data;
+				}
+			};
+			
+			// 是否允许上传
+			up.beforeUpload = function()
+			{
+				var type = this.file.type;
+				if(type != "image/jpeg" && type != "image/png")
+				{
+					alert("只支持jpeg和png图片!");
+					return false;
+				}
+				return true;
+			};
+		
+		
+		
+		var F = {};
+		
+		
+		F.tipReady = function(){
+			var url = document.location.toString();//获取url地址
+		    var urlParmStr = url.slice(url.indexOf('?')+1);//获取问号后所有的字符串
+		    //var parameterURL = location.search.substring(1, location.search.length);
+		    var arr = urlParmStr.split('&');//通过&符号将字符串分割转成数组
+		   	
+	   		if(arr.length==1){
+		    	var type = arr[0].split("=")[1];//获取数组中第一个参数
+		    	//var type = decodeURI(temp);//转码将解码方式unscape换为decodeURI，将中文参数获取
+		    	if(type=="elec"){$("#tip").append("添加电子产品");}
+		    	if(type=="cloth"){$("#tip").append("添加服装服饰");}
+		    	$("#addButton").attr("data",type);
+				$("#addButton").show();
+		    }
+		    if(arr.length==2){
+		    	var id = arr[0].split("=")[1];//获取数组中第一个参数
+		    	//var data = decodeURI(temp);//转码将解码方式unscape换为decodeURI，将中文参数获取
+		    	var type=arr[1].split("=")[1];//第二个参数
+		    	if(type=="elec"){$("#tip").append("修改电子产品信息：ID="+id);}
+		    	if(type=="cloth"){$("#tip").append("修改服装服饰信息：ID="+id);}
+		    	$("#updateButton").attr("data",type);
+		    	$("#updateButton").attr("data1",id);
+		    	$("#updateButton").show();
+		    	
+		    	var req = {};
+		    	req.id = id;
+		    	req.type = type;
+		    	
+		    	Af.rest("productSearchById.api",req,function(data){
+					$("#title").val(data.title);
+					$("#information").val(data.information);
+					$("#price").val(data.price);
+					$("#remain").val(data.remainNum);
+					$("#picture").attr("src",data.picturePath);
+				});
+			    }
+
+		}
+		F.addProduct = function(e){
+			
+			//图片上传
+			if(up.result == null){
+				alert('请先上传图片'); return;
+			}
+			
+			var req = {};
+			req.title = $("#title").val().trim();
+			req.information = $("#information").val().trim();
+			req.price = $("#price").val().trim();
+			req.remain = $("#remain").val().trim();
+			req.tmpPath = up.result.storePath; // up.result
+			req.pictureName = up.file.name;
+			req.type = $(e).attr("data");
+			
+			
+			Af.rest("productAdd.api",req,function(data){
+				location.href = 'admin.do';
+				alert("添加成功!");
+			});
+		
+		}
+	
+		F.updateProduct = function(e){
+			
+			var req = {};
+			req.title = $("#title").val().trim();
+			req.information = $("#information").val().trim();
+			req.price = $("#price").val().trim();
+			req.remain = $("#remain").val().trim();
+			//req.tmpPath = up.result.storePath; // 修改时，若不重新上传图片，则没有后台返回的up.result
+			var path = $("#picture").attr("src");
+			req.pictureName = path.split("/")[1];
+			req.picturePath = $("#picture").attr("src");
+			req.type = $(e).attr("data");
+			req.id = $(e).attr("data1");
+			
+			Af.rest("productUpdate.api",req,function(data){
+				location.href = 'admin.do';
+				alert("添加成功!");
+			});
+			
+		}
+		
+		$(document).ready(function(){
+
+			F.tipReady();
+			
+
+		});
+			
+			
+		
+		
+
+		
+		
+	</script>
+	
+</html>

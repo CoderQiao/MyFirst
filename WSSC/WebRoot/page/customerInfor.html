@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+	    <!--为了保证在移动端能够正常的显示-->
+	    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<!--
+	    	作者：2324805058@qq.com
+	    	时间：2019-09-30
+	    	描述：meta 属性不能导入body内
+	  -->
+	    <title>用户信息</title>
+	    <style>
+	    	.container{
+	    		margin: 100px auto;
+	    }
+	    table img{
+            width:50px;
+            height:50px;
+	    </style>
+	    
+	</head>
+	<body>
+		<!-- 设定基准路径 -->
+		<base href='/wssc/'> 
+		<#include '/page/head_customer.html' />
+		 <script>
+			//前端登录检查
+			if(user == null) location.href ='page/login_user.html';
+		</script>
+		<div class="container">
+			<div class="row">
+				
+				<div class="nav flex-column nav-pills col-3" id="v-pills-tab" role="tablist" >
+				  <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" >个人信息</a>
+				  <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" >已购商品</a>
+				</div>
+				<div class="tab-content col-9" id="v-pills-tabContent">
+				  <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel">
+				  	
+				  	<div style="width: 300px;">
+				  		<img src="${user.picturePath}" />
+				  		<a href="javascript:0" >上传头像</a>
+				  	</div>
+				  	
+				  	<div class="row">
+
+				  	<div class="col-2"style="margin: 10px;">
+				  		<label>用户名：</label><br />
+				  		<label>性别：</label><br />
+				  		<label>手机号：</label><br />
+				  		<label>地址：</label><br />
+				  	</div>
+				  	<div class="col-9"style="margin: 10px;">
+				  		<label>${user.name}</label><br />
+				  		<label>${user.sex}</label><br />
+				  		<label>${user.telephone}</label><br />
+				  		<label>${user.address}</label><br />
+				  	</div>
+				  	</div>
+				  </div>
+				  <div class="tab-pane fade" id="v-pills-profile" role="tabpanel">
+				  	
+				  		<table class="table table-hover"style="margin: 10px 0;">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col"><input name="checkTop" type="checkbox"></th>
+                  <th scope="col">名称</th>
+                  <th scope="col">售价</th>
+                  <th scope="col">图片</th>
+                  <th scope="col">数量</th>
+                  <th scope="col">操作</th>
+                </tr>
+              </thead>
+              <tbody>
+              <#list bills as bill>
+              	<tr>
+              	  <th scope="col" ><input value="${bill.billID}" type="checkbox"></th>
+                  <td style="width: 500px;">${bill.title}</td>
+                  <td>￥${bill.price}</td>
+                  <td style="margin: 0;padding: 2px;"><img src="${bill.picturePath}"></td>
+                  <td style="width: 200px;">${bill.number}</td>
+                  <td>
+                      <button data='${bill.billID}' class="btn btn-danger" onclick="removeBill(this)">移出</button>
+                  </td>
+                </tr>
+              </#list>
+              </tbody>
+            </table>
+				  	
+				  </div>
+				</div>
+			</div>
+			</div>
+		</div>
+	</body>
+	
+	<script>
+		function addToBill(){
+			var id_array = new Array();
+			$("tbody input:checkbox:checked").each(function(){
+				id_array.push($(this).val());
+				$(this).parent().parent().remove();
+			});
+			var req = {};
+			req.id_array = id_array;
+			Af.rest("billDelete.api",req,function(data){
+				alert("添加账单成功");
+			},function(data){
+				alert("请选择要购买的商品！");
+			});
+			
+		}
+		function removeCart(e){
+			var req = {};
+			req.billID = $(e).attr('data');
+			Af.rest("billDelete.api",req,function(data){
+				$(e).parent().parent().remove();
+				alert("账单删除成功！");
+			})
+		}
+		
+		
+		$("input[name='checkTop']").change(function(){
+		
+		if($(this).is(":checked")){
+			
+		$("input:checkbox").attr("checked",true);
+		}
+		else {$("input:checkbox").attr("checked",false);
+		}
+	});
+		
+	</script>
+	
+</html>

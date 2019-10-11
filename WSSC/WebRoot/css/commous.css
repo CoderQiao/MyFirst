@@ -1,0 +1,14 @@
+body{
+	background: #F2F2F2;
+}
+#content{
+	margin: 80px;
+	text-align: center;
+}
+img{
+	width: 400px;
+	height: 300px;
+}
+p{
+	text-align: left;
+}

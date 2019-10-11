@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- 设定基准路径 -->
+	<base href='/wssc/'>
+	<meta charset="utf-8">
+    <!--为了保证在移动端能够正常的显示-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<!--
+    	作者：2324805058@qq.com
+    	时间：2019-09-30
+    	描述：meta 属性不能导入body内
+    -->
+    <title>网上商城</title>
+    
+    <style>
+    	 h5{
+        text-align: center;
+    }
+    p{
+        text-align: center;
+    }
+    .carousel-item img{
+        width: 100%;
+        height: 400px;
+    }
+    	
+    	.foot{
+			width: 100%;
+			height: 80px;
+			background-color: black;
+			color: white;
+		}
+		
+		.item{
+			width: 255px;
+			border-radius: 10px;
+			background: #F2F2F2;
+			padding: 20px;
+			margin: 10px;
+			display: inline-block;
+		}
+		
+		.item:hover{
+			box-shadow: 5px 5px 4px 1px lightblue;
+		}
+		
+		.title{
+			width: 100%;
+		}
+		.title label{
+			font-size: 30px;
+			padding: 10px 0;
+		}
+		.title img{
+			width: 100%;
+			height: 200px;
+		}
+    </style>
+    
+</head>
+
+<style>
+   
+</style>
+
+<body>
+	
+	<!--#include virtual="/page/head_customer.html" -->
+
+<!--主容器-->
+<div class="container" style="margin: 0 auto;">
+
+    <!--轮播图-->
+    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel"style="margin: 0 auto;">
+        <!--
+        1.class="carousel-indicators" 创建指示器
+        2.data-target="#carouselExampleIndicators" 告诉bootstrap当前的索引属于哪一个轮播图
+        3.data-slide-to="0" 指定当前指示器的索引
+        4.class="active" 设置默认选中的指示器索引
+        -->
+        <ol class="carousel-indicators">
+            <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+            <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+            <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+            <li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
+        </ol>
+        <!--
+        1.class="carousel-inner" 创建轮播图的内容部分
+        2.class="carousel-item" 指定轮播图的每一页
+        -->
+
+        <div class="carousel-inner" >
+            <div class="carousel-item active">
+                <img src="lun/lun_1.jpg" class="d-block" alt="...">
+            </div>
+            <div class="carousel-item">
+                <img src="lun/lun_2.jpg" class="d-block" alt="...">
+            </div>
+            <div class="carousel-item">
+                <img src="lun/lun_3.jpg" class="d-block" alt="...">
+            </div>
+            <div class="carousel-item">
+                <img src="lun/lun_4.jpg" class="d-block" alt="...">
+            </div>
+        </div>
+        <!--
+        1.class="carousel-control-prev" 创建上一页的控制按钮
+        2. href="#carouselExampleIndicators" 指定控制按钮可用控制哪一个轮播图
+        -->
+        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" ></span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" ></span>
+        </a>
+    </div>
+	
+    <!--商品区-->
+    <div class="container">
+    	
+    	<div class="title">
+			<label>正品家电</label>
+			<img src="lun/lun_3.jpg"/>
+		</div>
+        <div class="row">
+        	<#list elecs as elec>
+            <div class="card item" onclick="enterElecInfor(${elec.eleID})">
+                <img class="card-img-top" src="${elec.picturePath}">
+                <div class="card-body">
+                    <h5 class="card-title">${elec.title}</h5>
+                    <p class="card-text">${elec.information}</p>
+                </div>
+            </div>
+            </#list>
+        </div>
+        
+        <div class="title">
+			<label>潮流服饰</label>
+			<img src="lun/title_2.jpg"/>
+		</div>
+        <div class="row">
+        	<#list cloths as cloth>
+        	<div class="card item" onclick="enterClothInfor(${cloth.cloID})" >
+                <img class="card-img-top" src="${cloth.picturePath}">
+                <div class="card-body">
+                    <h5 class="card-title">${cloth.title}</h5>
+                    <p class="card-text">${cloth.information}。</p>
+                </div>
+            </div>
+            </#list>
+        </div>
+        
+    </div>
+    <div class="foot">
+	<p align="center">迅达互动娱乐|服务条款|迅达隐私保护指南|广告服务|迅达招聘|迅达客户服务|地图|成长守护平台|商业合作|网站导航<br/>Copyright 1998-2019 xunda all rights reserved<br/>迅达电子商城&ensp;&ensp;版权所有
+				        </p>
+</div>
+</div>
+</body>
+
+<script>
+    $('.carousel').carousel({
+        interval: 3000
+    });
+    function enterElecInfor(eleID){
+    	location.href = "product/view/"+eleID+"_ele.shtml";
+    }
+    function enterClothInfor(cloID){
+    	location.href = "product/view/"+cloID+"_clo.shtml";
+    }
+</script>
+
+</html>

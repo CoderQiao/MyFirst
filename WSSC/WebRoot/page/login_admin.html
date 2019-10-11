@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title> 管理员登录 </title>
+		<script type="text/javascript" src="../js/jquery-3.1.1.js" ></script>
+		<script type="text/javascript" src="../js/afquery.js" ></script>
+		
+		<style>
+			body{
+				margin: 0px;
+				background-color: #309FE6;
+			}
+
+			/* 登录面板 */
+			#login{
+				background-color: #FFF;
+				margin: 10px auto;
+				width: 300px;
+				padding: 30px;
+			}
+			/* 非输入行 */
+			#login .line{
+				padding: 10px;
+			}
+			/* 输入行 */
+			#login .form-line{	
+				border: 1px solid #e7e7eb;	
+				padding: 10px;		
+			}
+			/* 输出行里的图片*/
+			#login .form-line img{
+				vertical-align: middle;				
+			}	
+			/* 输出行里的人的控件*/		
+			#login .form-line input	{
+				vertical-align: middle;	
+				width: calc(100% - 50px);	/* 占据剩余空间 */
+				border: 0px;	/* 不显示边框 */
+				padding: 4px;	
+				outline: none; /* 焦点状态时无边框 */	
+			}
+			/* 登录按钮 */
+			#login .submit{
+				width: 120px;
+				padding: 8px;	
+				color: #fff;
+				background-color: #4CB650;
+				border: 1px solid;
+				border-radius: 2px;
+				outline: none; /* 焦点状态时无边框 */
+			}
+			#login .submit:hover{
+				background-color: #2F9833;			
+			}
+			
+			/* 底部 */
+			#foot{
+				position: fixed;
+				bottom: 0px;
+				width: 100%;
+				background-color: rgba(255,255,255,0.5);
+				text-align: center;
+				padding: 6px;
+				
+			}
+		</style>
+	</head>
+	<body>
+
+		<!-- 第1行 -->
+		<div style='text-align: center; margin: 50px auto 30px auto;'>
+			<label style='font-size:20px; font-family: 微软雅黑; color:#fff;'> 
+				学生宿舍管理系统
+			</label>
+		</div>
+		
+		<!-- 第2行 -->
+		 <div id='login' >
+		 	<div class='line' style='text-align: center;margin-bottom: 20px;color:#444;'> 
+		 		管理员登录
+		 	</div> 
+		 	<div class='form-line'>
+		 		<img src='../img/user.png'>
+		 		<input id='username' name='username' type='text' placeholder='管理员账号'>
+		 	</div>
+		 	<div class='form-line'>
+		 		<img src='../img/password.png'>
+		 		<input id='password' name='password' type='password' placeholder='密码'>
+		 	</div>
+		 	<div class='line' style='text-align: right;'>
+		 		<button class='submit' onclick='M.login()'> 登录 </button>
+		 	</div>
+		 </div>		
+		
+	
+	</body>
+	<script>
+		var M={};
+		M.login = function()
+		{
+			var username = $('#username').val().trim();
+			var password = $('#password').val().trim();
+			var req = {};
+			req.username = $('#username').val().trim();
+			Af.rest('Login.api', req, function(data){
+				var user = data.username;
+				var pass = data.password;
+				if(user==username&&pass==password){
+					sessionStorage.setItem('username',username);
+					window.alert("登陆成功！");
+					window.history.go(-1);
+				}
+				else alert("失败");
+			});
+		}
+	</script>
+</html>
